@@ -15,6 +15,7 @@ import os, cv2
 import tarfile
 import pkg_resources
 from concurrent.futures import ProcessPoolExecutor
+import numpy as np
 
 
 data_sources = ['s3', 'mysql', 'redis', 'firebase', 'gcs', 'fs', 'postgresql', 'mongodb', 'slack', 'couchdb', 'gdrive', 'gdrive_workspace', 'text']
@@ -389,7 +390,9 @@ def read_video(args, file_path, frame_interval=30, max_workers=10):
         # Open the video file
         cap = cv2.VideoCapture(file_path)
 
-        if not cap.isOpened():
+        if cap.isOpened():
+            raise ValueError(f"Can open video file: {file_path}")
+        elif not cap.isOpened():
             raise ValueError(f"Cannot open video file: {file_path}")
 
         frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
